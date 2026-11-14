@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বকেয়া ত্রাণ ক্যালকুলেটর – ধারা ১৫৭ (ফর্ম ৩৯)</title>
+<meta name="description" content="আয়কর আইন ২০২৫-এর ধারা ১৫৭ (ফর্ম ৩৯) অনুযায়ী বকেয়া ত্রাণ হিসাব করার বিনামূল্যের ক্যালকুলেটর। / Free arrear relief calculator under Section 157 (Form 39).">
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <p class="badge" data-i18n="badge">আয়কর আইন, ২০২৫ · ধারা ১৫৭ · ফর্ম ৩৯</p>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="langBn" data-lang="bn">বাংলা</button>
+        <button type="button" id="langEn" data-lang="en">English</button>
+      </div>
+    </div>
+    <h1 data-i18n="title">বকেয়া ত্রাণ (Arrear Relief) ক্যালকুলেটর</h1>
+    <p class="lead" data-i18n="lead">আগের বছরগুলির বকেয়া বেতন (যেমন ডিএ বকেয়া) কি এক বছরে একসঙ্গে পেয়েছেন? আপনি কত কর-ত্রাণ দাবি করতে পারেন তা জেনে নিন। নিচের ঘরগুলি পূরণ করুন – উত্তর সঙ্গে সঙ্গে দেখা যাবে।</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="steps" aria-label="How it works">
+    <div class="step"><span>1</span><p data-i18n="step1">যে বছরে বকেয়া <b>পেয়েছেন</b>, সেই বছরের কর লিখুন</p></div>
+    <div class="step"><span>2</span><p data-i18n="step2">বকেয়া যে <b>আগের বছরগুলির</b>, সেগুলিতে ভাগ করুন</p></div>
+    <div class="step"><span>3</span><p data-i18n="step3">সঙ্গে সঙ্গে <b>আনুমানিক ত্রাণ</b> দেখুন</p></div>
+  </section>
+
+  <div class="layout">
+    <div class="forms">
+
+      <section class="card">
+        <h2><span class="num">1</span> <span data-i18n="c1title">যে বছরে বকেয়া পেয়েছেন</span></h2>
+        <p class="hint" data-i18n="c1hint">যে অর্থবর্ষে বকেয়া আপনার অ্যাকাউন্টে জমা পড়েছে, সেটি ধরুন।</p>
+        <div class="grid2">
+          <label class="field">
+            <span class="lbl" data-i18n="f1l">বকেয়া যোগ করার <em>আগে</em> প্রদেয় কর (₹)</span>
+            <input type="number" id="taxBefore" min="0" step="any" inputmode="decimal" placeholder="85000">
+            <small data-i18n="f1s">রিবেট ও সেস সহ মোট কর। TDS বাদ দেবেন না।</small>
+          </label>
+          <label class="field">
+            <span class="lbl" data-i18n="f2l">বকেয়া যোগ করার <em>আগে</em> করযোগ্য আয় (₹)</span>
+            <input type="number" id="incomeBefore" min="0" step="any" inputmode="decimal" placeholder="1100000">
+            <small data-i18n="f2s">ছাড়ের পরের আয় – <b>মোট বেতন নয়</b>।</small>
+          </label>
+          <label class="field">
+            <span class="lbl" data-i18n="f3l">মোট বকেয়া (₹)</span>
+            <input type="number" id="arrears" min="0" step="any" inputmode="decimal" placeholder="300000">
+            <small data-i18n="f3s">এই বছরে জমা পড়া সব বকেয়ার যোগফল।</small>
+          </label>
+          <label class="field">
+            <span class="lbl" data-i18n="f4l">বকেয়া যোগ করার <em>পরে</em> প্রদেয় কর (₹)</span>
+            <input type="number" id="taxAfter" min="0" step="any" inputmode="decimal" placeholder="140000">
+            <small data-i18n="f4s">বকেয়া ধরে আবার কর হিসাব করুন।</small>
+          </label>
+        </div>
+        <div class="auto"><span data-i18n="auto">বকেয়া যোগের পর করযোগ্য আয়:</span> <b id="incomeAfter">₹ 0</b></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="num">2</span> <span data-i18n="c2title">যে আগের বছরগুলির বকেয়া</span></h2>
+        <p class="hint" data-i18n="c2hint">প্রতিটি আগের বছরের জন্য সেই বছরের ভাগের বকেয়া লিখুন, এবং ওই ভাগ <em>ছাড়া</em> ও <em>সহ</em> সেই বছরের কর লিখুন।</p>
+        <div id="yearRows"></div>
+        <div class="row-actions">
+          <button type="button" class="btn ghost" id="addYear" data-i18n="addYear">+ আরেকটি বছর যোগ করুন</button>
+        </div>
+        <div class="check" id="allocCheck" role="status"></div>
+      </section>
+
+      <div class="row-actions">
+        <button type="button" class="btn ghost" id="resetBtn" data-i18n="reset">সব মুছে নতুন করুন</button>
+        <button type="button" class="btn ghost" id="printBtn" data-i18n="print">প্রিন্ট / PDF সংরক্ষণ</button>
+      </div>
+    </div>
+
+    <aside class="results">
+      <section class="card result-card" aria-live="polite">
+        <h2 data-i18n="rTitle">আপনার ফলাফল</h2>
+        <div class="big" id="reliefBig">₹ 0</div>
+        <p class="big-label" data-i18n="rBig">ধারা ১৫৭ অনুযায়ী আনুমানিক ত্রাণ</p>
+        <p class="msg" id="resultMsg"></p>
+        <dl class="breakdown">
+          <div><dt data-i18n="r1">প্রাপ্তির বছরে অতিরিক্ত কর</dt><dd id="rExtraReceipt">₹ 0</dd></div>
+          <div><dt data-i18n="r2">আগের বছরগুলিতে ভাগ করলে অতিরিক্ত কর</dt><dd id="rExtraEarlier">₹ 0</dd></div>
+          <div class="hl"><dt data-i18n="r3">আনুমানিক ত্রাণ</dt><dd id="rRelief">₹ 0</dd></div>
+          <div><dt data-i18n="r4">ত্রাণের পর নিট অতিরিক্ত কর</dt><dd id="rNet">₹ 0</dd></div>
+        </dl>
+      </section>
+    </aside>
+  </div>
+
+  <section class="glossary">
+    <h2 data-i18n="gTitle">এই শব্দগুলির মানে কী?</h2>
+    <div class="cards">
+      <article class="gcard"><h3 data-i18n="g1t">প্রাপ্তির বছর (Receipt year)</h3><p data-i18n="g1d">যে অর্থবর্ষে বকেয়া সত্যিই আপনার অ্যাকাউন্টে এসেছে – যে বছরের জন্য পাওনা ছিল সেই বছর নয়।</p></article>
+      <article class="gcard"><h3 data-i18n="g2t">বকেয়া (Arrears)</h3><p data-i18n="g2d">আগের বছরগুলিতে আপনার প্রাপ্য বেতন বা ডিএ, যা দেরিতে একসঙ্গে দেওয়া হয়েছে।</p></article>
+      <article class="gcard"><h3 data-i18n="g3t">করযোগ্য আয় (মোট বেতন নয়)</h3><p data-i18n="g3d">স্ট্যান্ডার্ড ডিডাকশন ও অন্যান্য অনুমোদিত ছাড়ের পর আপনার আয় যা থাকে। যে অঙ্কের উপর কর হিসাব হয়, সেটিই দিন।</p></article>
+      <article class="gcard"><h3 data-i18n="g4t">প্রদেয় কর (Tax payable)</h3><p data-i18n="g4d">প্রযোজ্য রিবেট ও সেস সহ মোট কর। আগে কাটা TDS <b>বাদ দেবেন না</b> – আমরা পরিশোধিত অঙ্ক নয়, আসল কর তুলনা করছি।</p></article>
+      <article class="gcard"><h3 data-i18n="g5t">প্রাপ্তির বছরে অতিরিক্ত কর</h3><p data-i18n="g5d">শুধু বকেয়া যোগ হওয়ার কারণে এই বছরে আপনাকে কতটা বেশি কর দিতে হচ্ছে (বকেয়া সহ কর − বকেয়া ছাড়া কর)।</p></article>
+      <article class="gcard"><h3 data-i18n="g6t">আগের বছরের ভাগের বকেয়া</h3><p data-i18n="g6d">বকেয়ার যে অংশ আসলে সেই বছরের প্রাপ্য ছিল। এটি আপনার বকেয়ার হিসাব-বিবরণী থেকে নিন। সব ভাগের যোগফল মোট বকেয়ার সমান হতে হবে।</p></article>
+      <article class="gcard"><h3 data-i18n="g7t">সেই বছরের বকেয়া ছাড়া / সহ কর</h3><p data-i18n="g7d">ওই আগের বছরে আপনার আসল কর কত ছিল, এবং সেই বছরের ভাগের বকেয়া ধরলে কত হত।</p></article>
+      <article class="gcard"><h3 data-i18n="g8t">আগের বছরগুলিতে ভাগ করলে অতিরিক্ত কর</h3><p data-i18n="g8d">বকেয়া সময়মতো পেলে প্রতিটি আগের বছরে যে অতিরিক্ত কর লাগত, তার মোট যোগফল।</p></article>
+      <article class="gcard"><h3 data-i18n="g9t">আনুমানিক ত্রাণ (Relief)</h3><p data-i18n="g9d">বকেয়া আগের বছরগুলিতে ভাগ করার ফলে এই বছরের অতিরিক্ত করের কতটা আপনি বাঁচাতে পারেন। এটি কখনও শূন্যের কম হয় না।</p></article>
+      <article class="gcard"><h3 data-i18n="g10t">ত্রাণের পর নিট অতিরিক্ত কর</h3><p data-i18n="g10d">ত্রাণ বাদ দেওয়ার পরেও প্রাপ্তির বছরে আপনাকে যে অতিরিক্ত কর দিতে হবে।</p></article>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h2 data-i18n="nTitle">জেনে রাখুন</h2>
+    <ul>
+      <li data-i18n="n1"><b>কীভাবে কাজ করে:</b> ত্রাণ = (প্রাপ্তির বছরে অতিরিক্ত কর) − (আগের বছরগুলিতে অতিরিক্ত কর)। আগের বছরগুলিতে কর সমান বা বেশি হলে ত্রাণ ₹0।</li>
+      <li data-i18n="n2">সব করের অঙ্কে রিবেট ও সেস ধরুন। TDS ধরবেন না।</li>
+      <li data-i18n="n3">প্রতিটি বছরের সঠিক স্ল্যাব অনুযায়ী করের অঙ্ক আপনাকে নিজে (বা DDO / ট্যাক্স উপদেষ্টার সাহায্যে) হিসাব করতে হবে। এই টুল শুধু তুলনা করে দেয়।</li>
+      <li data-i18n="n4">আপনার তথ্য কোথাও আপলোড হয় না। সব হিসাব আপনার ব্রাউজারেই হয়।</li>
+    </ul>
+    <p class="disclaimer" data-i18n="disc"><b>গুরুত্বপূর্ণ:</b> এটি শুধুমাত্র একটি আনুমানিক তুলনা। এটি আপনার ত্রাণের যোগ্যতা বা আইনত সঠিক অঙ্ক নিশ্চিত করে না। ফাইল করার আগে প্রযোজ্য ধারা, বছরভিত্তিক হিসাব এবং ফর্ম ৩৯ / প্রয়োজনীয় নথি আপনার DDO বা ট্যাক্স উপদেষ্টার সঙ্গে যাচাই করে নিন।</p>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap" data-i18n="foot">বকেয়া ত্রাণ ক্যালকুলেটর · শুধুমাত্র দিকনির্দেশের জন্য, ট্যাক্স পরামর্শ নয়</div></footer>
+
+<script src="script.js?v=3"></script>
+</body>
+</html>

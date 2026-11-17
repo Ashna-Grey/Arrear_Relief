@@ -26,6 +26,23 @@
   // ---------- Translations ----------
   var I18N = {
     en: {
+      idTitle: 'Taxpayer details',
+      pSecA: 'Year of receipt',
+      pSecB: 'Arrears allocated to earlier years',
+      pSecC: 'Result (Section 157)',
+      pItem: 'Description',
+      pAmt: 'Amount (₹)',
+      pIncAfter: 'Taxable income after arrears',
+      pYear: 'Year',
+      pExtra: 'Extra tax',
+      pTotal: 'Total',
+      idHint: 'These details appear at the top of the printed / PDF copy only. Nothing is uploaded.',
+      idName: 'Name',
+      idRank: 'Rank',
+      idPan: 'PAN No.',
+      phName: 'Full name',
+      phRank: 'e.g. Inspector',
+      panBad: 'PAN format looks wrong. Expected: 5 letters, 4 digits, 1 letter (e.g. ABCDE1234F).',
       title: 'Arrear Relief Calculator',
       badge: 'Income-tax Act, 2025 · Section 157 · Form 39',
       lead: 'Received salary arrears (like DA arrears) in one year that belong to earlier years? Find out how much tax relief you may claim. Fill in the boxes below – the answer updates instantly.',
@@ -90,6 +107,23 @@
       pageTitle: 'Arrear Relief Calculator – Section 157 (Form 39)'
     },
     bn: {
+      idTitle: 'করদাতার তথ্য',
+      pSecA: 'প্রাপ্তির বছরের তথ্য',
+      pSecB: 'আগের বছরগুলিতে বকেয়ার ভাগ',
+      pSecC: 'ফলাফল (ধারা ১৫৭)',
+      pItem: 'বিবরণ',
+      pAmt: 'পরিমাণ (₹)',
+      pIncAfter: 'বকেয়া যোগের পর করযোগ্য আয়',
+      pYear: 'বছর',
+      pExtra: 'অতিরিক্ত কর',
+      pTotal: 'মোট',
+      idHint: 'এই তথ্য শুধু প্রিন্ট / PDF-এর উপরে দেখাবে। কোথাও আপলোড হয় না।',
+      idName: 'নাম',
+      idRank: 'পদমর্যাদা (Rank)',
+      idPan: 'প্যান নম্বর (PAN No.)',
+      phName: 'আপনার পূর্ণ নাম',
+      phRank: 'যেমন: ইন্সপেক্টর',
+      panBad: 'PAN-এর ফরম্যাট ভুল। সঠিক ফরম্যাট: ৫টি অক্ষর, ৪টি সংখ্যা, ১টি অক্ষর (যেমন ABCDE1234F)।',
       title: 'বকেয়া ত্রাণ (Arrear Relief) ক্যালকুলেটর',
       badge: 'আয়কর আইন, ২০২৫ · ধারা ১৫৭ · ফর্ম ৩৯',
       lead: 'আগের বছরগুলির বকেয়া বেতন (যেমন ডিএ বকেয়া) কি এক বছরে একসঙ্গে পেয়েছেন? আপনি কত কর-ত্রাণ দাবি করতে পারেন তা জেনে নিন। নিচের ঘরগুলি পূরণ করুন – উত্তর সঙ্গে সঙ্গে দেখা যাবে।',
@@ -224,7 +258,43 @@
     };
   }
 
+
+  // ---------- Print-only summary tables ----------
+  function updatePrint(d, r) {
+    $('paTaxBefore').textContent = fmt(d.taxBefore);
+    $('paIncBefore').textContent = fmt(d.incomeBefore);
+    $('paArrears').textContent = fmt(d.arrears);
+    $('paTaxAfter').textContent = fmt(d.taxAfter);
+    $('paIncAfter').textContent = fmt(r.incomeAfter);
+
+    var body = $('pYears');
+    body.innerHTML = '';
+    Array.prototype.forEach.call(yearRows.children, function (row, i) {
+      var label = row.querySelector('.y-label').value.trim();
+      var y = d.years[i];
+      if (!label && !y.alloc && !y.taxWithout && !y.taxWith) return;   // skip blank rows
+      var tr = document.createElement('tr');
+      [label || '–', fmt(y.alloc), fmt(y.taxWithout), fmt(y.taxWith), fmt(r.yearExtras[i])].forEach(function (txt, k) {
+        var td = document.createElement('td');
+        if (k > 0) td.className = 'num';
+        td.textContent = txt;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    $('pTotAlloc').textContent = fmt(r.allocTotal);
+    $('pTotExtra').textContent = fmt(r.extraEarlier);
+    $('pCheck').textContent = $('allocCheck').textContent;
+
+    $('prExtraReceipt').textContent = fmt(r.extraReceipt);
+    $('prExtraEarlier').textContent = fmt(r.extraEarlier);
+    $('prRelief').textContent = fmt(r.relief);
+    $('prNet').textContent = fmt(r.net);
+    $('pMsg').textContent = $('resultMsg').textContent;
+  }
+
   function update() {
+    updateId();
     var d = readData(), r = calculate(d);
     $('incomeAfter').textContent = fmt(r.incomeAfter);
     Array.prototype.forEach.call(yearRows.children, function (row, i) {
@@ -255,10 +325,38 @@
     else if (r.extraReceipt === 0) m.textContent = t('msgNoExtra');
     else if (r.relief > 0) m.textContent = t('msgRelief', fmt(r.relief));
     else m.textContent = t('msgNone');
+    updatePrint(d, r);
   }
 
+
+  // ---------- Taxpayer details (Name / Rank / PAN) ----------
+  var PAN_RE = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
+  function normalisePan() {
+    var el = $('userPan');
+    var pos = el.selectionStart;
+    var v = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+    if (v !== el.value) { el.value = v; try { el.setSelectionRange(pos, pos); } catch (e) {} }
+    return v;
+  }
+
+  function checkPan(final) {
+    var v = $('userPan').value;
+    var bad = v.length > 0 && !PAN_RE.test(v) && (final || v.length === 10);
+    $('panField').classList.toggle('pan-invalid', bad);
+  }
+
+  function updateId() {
+    var pan = normalisePan();
+    checkPan(false);
+    $('pName').textContent = $('userName').value.trim();
+    $('pRank').textContent = $('userRank').value.trim();
+    $('pPan').textContent = pan;
+  }
+  $('userPan').addEventListener('blur', function () { checkPan(true); });
+
   function resetAll() {
-    ['taxBefore', 'incomeBefore', 'arrears', 'taxAfter'].forEach(function (id) { $(id).value = ''; });
+    ['userName', 'userRank', 'userPan', 'taxBefore', 'incomeBefore', 'arrears', 'taxAfter'].forEach(function (id) { $(id).value = ''; });
     yearRows.innerHTML = '';
     for (var i = 0; i < 3; i++) addYear();
     applyLang(); update();

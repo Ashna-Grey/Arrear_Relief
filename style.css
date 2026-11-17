@@ -83,3 +83,50 @@ input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(31,
 .lang button.on{background:#fff;color:#1f3fa8}
 .hero h1{margin-top:14px}
 @media print{.lang{display:none}}
+
+/* ---------- Taxpayer details (screen) ---------- */
+.idcard .grid3{margin-top:4px}
+.pan-warn{display:none;color:var(--bad);font-size:.78rem}
+.field.pan-invalid .pan-warn{display:block}
+.field.pan-invalid input{border-color:var(--bad)}
+#userPan{text-transform:uppercase;letter-spacing:.08em}
+
+/* Print-only table: hidden on screen */
+.print-id{display:none}
+
+/* ---------- Print: clean, tabular PDF ---------- */
+@page{margin:14mm}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .idcard,.topbar .lang{display:none}
+  .hero{background:none;color:#000;padding:0 0 10px;border-bottom:2px solid #1f3fa8}
+  .hero h1{color:#1f3fa8;font-size:20pt;margin:6px 0 0}
+  .badge{background:none;color:#444;padding:0;font-size:9pt}
+  .print-id{display:table;width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:11pt;color:#000;break-inside:avoid}
+  .print-id caption{caption-side:top;text-align:left;font-weight:700;font-size:11pt;color:#1f3fa8;padding-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+  .print-id th,.print-id td{border:1px solid #555;padding:9px 12px;text-align:left;vertical-align:middle}
+  .print-id th{width:28%;background:#eef3ff;font-weight:600}
+  .print-id td{min-height:30px;height:30px}
+  #pPan{letter-spacing:.12em;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .card,.result-card{border:1px solid #999;box-shadow:none}
+  .result-card{border:2px solid #1f3fa8}
+  input[type=number],input[type=text]{border:none;border-bottom:1px solid #999;border-radius:0;background:none;padding:2px 0}
+}
+
+/* ---------- Print-only summary tables ---------- */
+.print-sheet{display:none}
+@media print{
+  .layout,.notes{display:none}
+  .print-sheet{display:block;color:#000}
+  .print-sheet h3{margin:14px 0 6px;font-size:11pt;color:#1f3fa8;text-transform:uppercase;letter-spacing:.06em}
+  .ptable{width:100%;border-collapse:collapse;margin:0 0 6px;font-size:10.5pt;break-inside:avoid}
+  .ptable th,.ptable td{border:1px solid #555;padding:7px 10px;text-align:left;vertical-align:middle}
+  .ptable thead th{background:#1f3fa8;color:#fff;font-weight:600}
+  .ptable .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .ptable em{font-style:normal;font-weight:700}
+  .ptable tfoot td{background:#f1f1f1;font-weight:700}
+  .ptable-result tr.hl td{background:#e6f6ee;font-weight:700;font-size:11.5pt}
+  .pcheck,.pmsg{font-size:10pt;margin:4px 0 8px}
+  .pmsg{font-weight:600}
+  .pdisc{font-size:8.5pt;color:#444;border-top:1px solid #999;padding-top:8px;margin-top:14px}
+}

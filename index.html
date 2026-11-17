@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>বকেয়া ত্রাণ ক্যালকুলেটর – ধারা ১৫৭ (ফর্ম ৩৯)</title>
 <meta name="description" content="আয়কর আইন ২০২৫-এর ধারা ১৫৭ (ফর্ম ৩৯) অনুযায়ী বকেয়া ত্রাণ হিসাব করার বিনামূল্যের ক্যালকুলেটর। / Free arrear relief calculator under Section 157 (Form 39).">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style-updated.css?v=5">
 </head>
 <body>
 
@@ -30,6 +30,82 @@
     <div class="step"><span>2</span><p data-i18n="step2">বকেয়া যে <b>আগের বছরগুলির</b>, সেগুলিতে ভাগ করুন</p></div>
     <div class="step"><span>3</span><p data-i18n="step3">সঙ্গে সঙ্গে <b>আনুমানিক ত্রাণ</b> দেখুন</p></div>
   </section>
+
+
+  <!-- TAXPAYER DETAILS (screen form) -->
+  <section class="card idcard" aria-label="Taxpayer details">
+    <h2><span data-i18n="idTitle">করদাতার তথ্য</span></h2>
+    <p class="hint" data-i18n="idHint">এই তথ্য শুধু প্রিন্ট / PDF-এর উপরে দেখাবে। কোথাও আপলোড হয় না।</p>
+    <div class="grid3">
+      <label class="field">
+        <span class="lbl" data-i18n="idName">নাম</span>
+        <input type="text" id="userName" autocomplete="name" maxlength="80" placeholder="" data-i18n-ph="phName">
+      </label>
+      <label class="field">
+        <span class="lbl" data-i18n="idRank">পদমর্যাদা (Rank)</span>
+        <input type="text" id="userRank" maxlength="60" placeholder="" data-i18n-ph="phRank">
+      </label>
+      <label class="field" id="panField">
+        <span class="lbl" data-i18n="idPan">প্যান নম্বর (PAN No.)</span>
+        <input type="text" id="userPan" maxlength="10" autocomplete="off" spellcheck="false" placeholder="ABCDE1234F" inputmode="text">
+        <small class="pan-warn" data-i18n="panBad">PAN-এর ফরম্যাট ভুল। সঠিক ফরম্যাট: ৫টি অক্ষর, ৪টি সংখ্যা, ১টি অক্ষর (যেমন ABCDE1234F)।</small>
+      </label>
+    </div>
+  </section>
+
+  <!-- TAXPAYER DETAILS (print-only table) -->
+  <table class="print-id" aria-hidden="true">
+    <caption data-i18n="idTitle">করদাতার তথ্য</caption>
+    <tbody>
+      <tr><th data-i18n="idName">নাম</th><td id="pName"></td></tr>
+      <tr><th data-i18n="idRank">পদমর্যাদা (Rank)</th><td id="pRank"></td></tr>
+      <tr><th data-i18n="idPan">প্যান নম্বর (PAN No.)</th><td id="pPan"></td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- PRINT-ONLY SUMMARY TABLES -->
+  <div class="print-sheet" aria-hidden="true">
+    <h3 data-i18n="pSecA"></h3>
+    <table class="ptable">
+      <thead><tr><th data-i18n="pItem"></th><th class="num" data-i18n="pAmt"></th></tr></thead>
+      <tbody>
+        <tr><td data-i18n="f1l"></td><td class="num" id="paTaxBefore"></td></tr>
+        <tr><td data-i18n="f2l"></td><td class="num" id="paIncBefore"></td></tr>
+        <tr><td data-i18n="f3l"></td><td class="num" id="paArrears"></td></tr>
+        <tr><td data-i18n="f4l"></td><td class="num" id="paTaxAfter"></td></tr>
+        <tr><td data-i18n="pIncAfter"></td><td class="num" id="paIncAfter"></td></tr>
+      </tbody>
+    </table>
+
+    <h3 data-i18n="pSecB"></h3>
+    <table class="ptable">
+      <thead><tr>
+        <th data-i18n="pYear"></th><th class="num" data-i18n="yAlloc"></th>
+        <th class="num" data-i18n="yWithout"></th><th class="num" data-i18n="yWith"></th>
+        <th class="num" data-i18n="pExtra"></th>
+      </tr></thead>
+      <tbody id="pYears"></tbody>
+      <tfoot><tr>
+        <td data-i18n="pTotal"></td><td class="num" id="pTotAlloc"></td>
+        <td></td><td></td><td class="num" id="pTotExtra"></td>
+      </tr></tfoot>
+    </table>
+    <p class="pcheck" id="pCheck"></p>
+
+    <h3 data-i18n="pSecC"></h3>
+    <table class="ptable ptable-result">
+      <thead><tr><th data-i18n="pItem"></th><th class="num" data-i18n="pAmt"></th></tr></thead>
+      <tbody>
+        <tr><td data-i18n="r1"></td><td class="num" id="prExtraReceipt"></td></tr>
+        <tr><td data-i18n="r2"></td><td class="num" id="prExtraEarlier"></td></tr>
+        <tr class="hl"><td data-i18n="r3"></td><td class="num" id="prRelief"></td></tr>
+        <tr><td data-i18n="r4"></td><td class="num" id="prNet"></td></tr>
+      </tbody>
+    </table>
+    <p class="pmsg" id="pMsg"></p>
+    <p class="pdisc" data-i18n="disc"></p>
+  </div>
 
   <div class="layout">
     <div class="forms">
@@ -124,6 +200,6 @@
 
 <footer class="foot"><div class="wrap" data-i18n="foot">বকেয়া ত্রাণ ক্যালকুলেটর · শুধুমাত্র দিকনির্দেশের জন্য, ট্যাক্স পরামর্শ নয়</div></footer>
 
-<script src="script.js?v=3"></script>
+<script src="script-updated.js?v=5"></script>
 </body>
 </html>
